@@ -6,7 +6,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/STUCharacterMovementComponent.h"
 
-
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -49,18 +48,35 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAction("Running", IE_Released, this, &ASTUBaseCharacter::RunningEnd);
 }
 
+float ASTUBaseCharacter::GetMovementDirection() const
+{
+    if (GetVelocity().IsZero())
+        return 0.0f;
+    FVector ForwardVector = GetActorForwardVector();
+    FVector VelocityVector = GetVelocity().GetSafeNormal();
+    float DotNum = FVector::DotProduct(ForwardVector, VelocityVector);
+    FVector CrossProduct = FVector::CrossProduct(ForwardVector, VelocityVector);
+    float Direction = FMath::Acos(DotNum);
+    Direction = CrossProduct.IsZero() ? Direction : FMath::Sign(CrossProduct.Z) * Direction;
+    return FMath::RadiansToDegrees(Direction);
+}
+
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
+    if (Amount > 0)
+        return;
     IsMovingForward = Amount > 0.0f;
     AddMovementInput(GetActorForwardVector(), Amount);
 }
 
 void ASTUBaseCharacter::MoveRight(float Amount)
 {
+    if (Amount > 0)
+        return;
     AddMovementInput(GetActorRightVector(), Amount);
 }
 
-void ASTUBaseCharacter::RunningStart() 
+void ASTUBaseCharacter::RunningStart()
 {
     PressRunning = true;
 }

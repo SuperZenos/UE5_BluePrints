@@ -41,6 +41,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Movement")
     bool IsRunning() const { return PressRunning && IsMovingForward && !GetVelocity().IsZero(); }
 
+    UFUNCTION(BlueprintCallable, Category = "Movement")
+    float GetMovementDirection() const;
+
 private:
     void MoveForward(float Amount);
     void MoveRight(float Amount);
