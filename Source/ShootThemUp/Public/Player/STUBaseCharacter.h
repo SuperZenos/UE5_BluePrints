@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class USTUHealthComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -26,8 +28,10 @@ protected:
     USpringArmComponent* SpringArmComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovingState")
-    bool PressRunning = false;
-    bool IsMovingForward = false;
+    USTUHealthComponent* HealthComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MovingState")
+    UTextRenderComponent* HealthTextComponent;
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
@@ -45,6 +49,9 @@ public:
     float GetMovementDirection() const;
 
 private:
+    bool PressRunning = false;
+    bool IsMovingForward = false;
+
     void MoveForward(float Amount);
     void MoveRight(float Amount);
     void RunningStart();
