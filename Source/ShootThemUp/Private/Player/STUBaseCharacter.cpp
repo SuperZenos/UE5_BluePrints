@@ -63,7 +63,7 @@ float ASTUBaseCharacter::GetMovementDirection() const
 
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
-    if (Amount > 0)
+    if (Amount == 0)
         return;
     IsMovingForward = Amount > 0.0f;
     AddMovementInput(GetActorForwardVector(), Amount);
@@ -71,7 +71,7 @@ void ASTUBaseCharacter::MoveForward(float Amount)
 
 void ASTUBaseCharacter::MoveRight(float Amount)
 {
-    if (Amount > 0)
+    if (Amount == 0)
         return;
     AddMovementInput(GetActorRightVector(), Amount);
 }
