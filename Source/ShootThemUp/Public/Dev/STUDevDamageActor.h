@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "STUDevDamageActor.generated.h"
 
+class USTUIceDamageType;
+class USTUFireDamageType;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUDevDamageActor : public AActor
 {
@@ -30,6 +33,9 @@ protected:
     float Damage = 10.0f;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool DoFullDamage = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TSubclassOf<UDamageType> DamageType;
+
 
 public:
     // Called every frame
