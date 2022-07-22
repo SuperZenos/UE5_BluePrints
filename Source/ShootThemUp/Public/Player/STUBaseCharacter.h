@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
+class ASTUBaseWeapon;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -17,7 +18,6 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
     GENERATED_BODY()
 
 public:
-    // Sets default values for this character's properties
     ASTUBaseCharacter(const FObjectInitializer& ObjInit);
 
 protected:
@@ -44,14 +44,15 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Damage")
     FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
-    // Called when the game starts or when spawned
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+    TSubclassOf<ASTUBaseWeapon> WeaponClass;
+
     virtual void BeginPlay() override;
 
 public:
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
     UFUNCTION(BlueprintCallable, Category = "Movement")
@@ -75,4 +76,6 @@ private:
 
     UFUNCTION()
     void OnGroundLanded(const FHitResult& Hit);
+
+    void SpawnWeapon();
 };
