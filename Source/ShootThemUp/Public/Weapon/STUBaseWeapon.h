@@ -19,7 +19,17 @@ public:
     virtual void Fire();
 
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FName MuzzleSocketName = "MuzzleSocket";
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    float ShootDistance = 1500.0f;
+
     virtual void BeginPlay() override;
+
+private:
+    void MakeShot();
 };
