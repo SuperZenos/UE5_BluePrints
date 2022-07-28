@@ -25,8 +25,6 @@ void ASTUBaseWeapon::BeginPlay()
 
 void ASTUBaseWeapon::Fire()
 {
-    UE_LOG(LogSTUBaseWeapon, Display, TEXT("Fire"));
-
     MakeShot();
 }
 
@@ -42,8 +40,10 @@ void ASTUBaseWeapon::MakeShot()
 
     FHitResult HitResult;
     MakeHit(HitResult, TraceStart, TraceEnd);
-    if (HitResult.bBlockingHit)
+    if (HitResult.bBlockingHit && bIsHitValid(HitResult, TraceStart, TraceEnd))
     {
+        UE_LOG(LogSTUBaseWeapon, Display, TEXT("BoneName: %s"), *HitResult.BoneName.ToString());
+        MakeDamage(HitResult);
         DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::White, false, 3.0f, 0);
         DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 32, FColor::Red, false, 5.0f);
     }
@@ -102,4 +102,34 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
     CollisionParams.AddIgnoredActor(GetOwner());
 
     GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
+}
+
+void ASTUBaseWeapon::MakeDamage(FHitResult& HitResult) const
+{
+    auto* HitActor = HitResult.GetActor();
+    if (!HitActor)
+        return;
+
+    if (HitResult.BoneName.ToString() == "b_head")
+        HitActor->TakeDamage(HeadDamage, {}, GetPlayerController(), GetOwner());
+    else
+        HitActor->TakeDamage(BodyDamage, {}, GetPlayerController(), GetOwner());
+}
+
+bool ASTUBaseWeapon::bIsHitValid(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd)
+{
+    FVector TraceDirectionVector = TraceEnd - TraceStart;
+    TraceDirectionVector.Normalize();
+
+    FVector ShootDirectionVector = HitResult.Location - GetMuzzleWorldLocation();
+    ShootDirectionVector.Normalize();
+
+    auto Player = GetOwner();
+    if (!Player)
+        return false;
+
+    float ShootSingle = FMath::Acos(FVector::DotProduct(ShootDirectionVector, TraceDirectionVector));
+    if (FMath::RadiansToDegrees(ShootSingle) < 60)
+        return true;
+    return false;
 }

@@ -25,8 +25,14 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FName MuzzleSocketName = "MuzzleSocket";
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
     float ShootDistance = 1500.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
+    float BodyDamage = 20.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
+    float HeadDamage = 25.0f;
 
     virtual void BeginPlay() override;
 
@@ -38,4 +44,6 @@ private:
     FVector GetMuzzleWorldLocation() const;
     bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+    void MakeDamage(FHitResult& HitResult) const;
+    bool bIsHitValid(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 };
