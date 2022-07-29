@@ -21,6 +21,11 @@ public:
 
     void OnCharacterDeath();
 
+    ACharacter* GetOwner() const;
+    APlayerController* GetPlayerController() const;
+    bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
+    FVector GetMuzzleWorldLocation() const;
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
     USkeletalMeshComponent* WeaponMesh;
@@ -37,24 +42,12 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
     float HeadDamage = 25.0f;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
-    float RevolutionsPerMinute = 600.0f;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
-    float BulletSpread = 1.5f;
-
     virtual void BeginPlay() override;
+    virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 
-    void MakeShot();
-    ACharacter* GetOwner() const;
-    APlayerController* GetPlayerController() const;
-    bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
-    FVector GetMuzzleWorldLocation() const;
-    bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
+    virtual void MakeShot();
+
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
     void MakeDamage(FHitResult& HitResult) const;
     bool bIsHitValid(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
-
-private:
-    FTimerHandle ShotTimerHandle;
 };

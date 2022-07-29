@@ -23,47 +23,16 @@ void ASTUBaseWeapon::BeginPlay()
     check(WeaponMesh);
 }
 
-void ASTUBaseWeapon::StartFire()
-{
-    MakeShot();
-    float TimerBetweenShots = 60.0f / RevolutionsPerMinute;
-    GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimerBetweenShots, true);
-}
+void ASTUBaseWeapon::StartFire() {}
 
-void ASTUBaseWeapon::StopFire()
-{
-    GetWorldTimerManager().ClearTimer(ShotTimerHandle);
-}
+void ASTUBaseWeapon::StopFire() {}
+
+void ASTUBaseWeapon::MakeShot() {}
 
 void ASTUBaseWeapon::OnCharacterDeath()
 {
     SetLifeSpan(3.0f);
     StopFire();
-}
-
-void ASTUBaseWeapon::MakeShot()
-{
-    if (!GetWorld())
-        return;
-
-    FVector TraceStart;
-    FVector TraceEnd;
-    if (!GetTraceData(TraceStart, TraceEnd))
-        return;
-
-    FHitResult HitResult;
-    MakeHit(HitResult, TraceStart, TraceEnd);
-    if (HitResult.bBlockingHit && bIsHitValid(HitResult, TraceStart, TraceEnd))
-    {
-        UE_LOG(LogSTUBaseWeapon, Display, TEXT("BoneName: %s"), *HitResult.BoneName.ToString());
-        MakeDamage(HitResult);
-        DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::White, false, 3.0f, 0);
-        DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 32, FColor::Red, false, 5.0f);
-    }
-    else
-    {
-        DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::White, false, 3.0f, 0);
-    }
 }
 
 ACharacter* ASTUBaseWeapon::GetOwner() const
@@ -104,8 +73,7 @@ bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
         return false;
 
     TraceStart = ViewLocation;
-    const float HalfRad = FMath::DegreesToRadians(BulletSpread);
-    const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);
+    const FVector ShootDirection = ViewRotation.Vector();
     TraceEnd = ViewLocation + ShootDirection * ShootDistance;
     return true;
 }
