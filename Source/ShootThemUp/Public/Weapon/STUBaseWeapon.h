@@ -16,7 +16,10 @@ class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 public:
     ASTUBaseWeapon();
 
-    virtual void Fire();
+    virtual void StartFire();
+    virtual void StopFire();
+
+    void OnCharacterDeath();
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -34,9 +37,14 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
     float HeadDamage = 25.0f;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
+    float RevolutionsPerMinute = 600.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
+    float BulletSpread = 1.5f;
+
     virtual void BeginPlay() override;
 
-private:
     void MakeShot();
     ACharacter* GetOwner() const;
     APlayerController* GetPlayerController() const;
@@ -46,4 +54,7 @@ private:
     void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
     void MakeDamage(FHitResult& HitResult) const;
     bool bIsHitValid(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+
+private:
+    FTimerHandle ShotTimerHandle;
 };
