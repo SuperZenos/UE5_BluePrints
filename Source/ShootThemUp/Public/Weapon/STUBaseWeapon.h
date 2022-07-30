@@ -21,7 +21,7 @@ public:
 
     void OnCharacterDeath();
 
-    ACharacter* GetOwner() const;
+    ACharacter* GetCharacter() const;
     APlayerController* GetPlayerController() const;
     bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
     FVector GetMuzzleWorldLocation() const;

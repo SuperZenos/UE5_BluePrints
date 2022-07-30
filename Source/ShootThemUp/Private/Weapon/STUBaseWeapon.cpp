@@ -35,15 +35,15 @@ void ASTUBaseWeapon::OnCharacterDeath()
     StopFire();
 }
 
-ACharacter* ASTUBaseWeapon::GetOwner() const
+ACharacter* ASTUBaseWeapon::GetCharacter() const
 {
-    auto Player = Cast<ACharacter>(Super::GetOwner());
+    auto Player = Cast<ACharacter>(GetOwner());
     return Player;
 }
 
 APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
-    const auto Player = GetOwner();
+    const auto Player = GetCharacter();
     if (!Player)
         return nullptr;
     const auto Controller = Player->GetController<APlayerController>();
@@ -105,10 +105,6 @@ bool ASTUBaseWeapon::bIsHitValid(FHitResult& HitResult, const FVector& TraceStar
 
     FVector ShootDirectionVector = HitResult.Location - GetMuzzleWorldLocation();
     ShootDirectionVector.Normalize();
-
-    auto Player = GetOwner();
-    if (!Player)
-        return false;
 
     float ShootSingle = FMath::Acos(FVector::DotProduct(ShootDirectionVector, TraceDirectionVector));
     if (FMath::RadiansToDegrees(ShootSingle) < 60)
