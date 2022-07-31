@@ -31,7 +31,7 @@ void ASTUBaseWeapon::MakeShot() {}
 
 void ASTUBaseWeapon::OnCharacterDeath()
 {
-    SetLifeSpan(3.0f);
+    Destroy();
     StopFire();
 }
 
