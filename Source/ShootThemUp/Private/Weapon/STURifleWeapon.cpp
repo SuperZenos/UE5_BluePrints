@@ -4,6 +4,11 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
+ASTURifleWeapon::ASTURifleWeapon()
+{
+    BulletSpread = 1.5f;
+}
+
 void ASTURifleWeapon::StartFire()
 {
     MakeShot();
@@ -38,6 +43,18 @@ void ASTURifleWeapon::MakeShot()
     {
         DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::White, false, 3.0f, 0);
     }
+}
+
+void ASTURifleWeapon::MakeDamage(FHitResult& HitResult) const
+{
+    auto* HitActor = HitResult.GetActor();
+    if (!HitActor)
+        return;
+
+    if (HitResult.BoneName.ToString() == "b_head")
+        HitActor->TakeDamage(HeadDamage, {}, GetPlayerController(), GetOwner());
+    else
+        HitActor->TakeDamage(BodyDamage, {}, GetPlayerController(), GetOwner());
 }
 
 bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const

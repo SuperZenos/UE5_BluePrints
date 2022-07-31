@@ -86,18 +86,6 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, c
     GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 }
 
-void ASTUBaseWeapon::MakeDamage(FHitResult& HitResult) const
-{
-    auto* HitActor = HitResult.GetActor();
-    if (!HitActor)
-        return;
-
-    if (HitResult.BoneName.ToString() == "b_head")
-        HitActor->TakeDamage(HeadDamage, {}, GetPlayerController(), GetOwner());
-    else
-        HitActor->TakeDamage(BodyDamage, {}, GetPlayerController(), GetOwner());
-}
-
 bool ASTUBaseWeapon::bIsHitValid(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd)
 {
     FVector TraceDirectionVector = TraceEnd - TraceStart;

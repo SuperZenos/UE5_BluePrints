@@ -22,13 +22,14 @@ void ASTULauncherWeapon::MakeShot()
     MakeHit(HitResult, TraceStart, TraceEnd);
 
     const FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
-    const FVector Direction = (EndPoint - TraceStart).GetSafeNormal();
+    const FVector Direction = (EndPoint - GetMuzzleWorldLocation()).GetSafeNormal();
 
     const FTransform SpawnTransform(FRotator::ZeroRotator, GetMuzzleWorldLocation());
     ASTUProjectile* Projectile = GetWorld()->SpawnActorDeferred<ASTUProjectile>(ProjectileClass, SpawnTransform, this);
     if (Projectile)
     {
         Projectile->SetShotDirection(Direction);
+        Projectile->SetOwner(GetOwner());
         Projectile->FinishSpawning(SpawnTransform);
     }
 }

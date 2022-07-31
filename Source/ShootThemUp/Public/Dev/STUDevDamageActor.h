@@ -15,14 +15,12 @@ class SHOOTTHEMUP_API ASTUDevDamageActor : public AActor
     GENERATED_BODY()
 
 public:
-    // Sets default values for this actor's properties
     ASTUDevDamageActor();
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
     USceneComponent* SceneComponent;
 
 protected:
-    // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -36,8 +34,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TSubclassOf<UDamageType> DamageType;
 
-
 public:
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 };

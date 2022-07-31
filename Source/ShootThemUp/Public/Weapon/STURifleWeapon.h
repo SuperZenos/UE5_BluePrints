@@ -12,17 +12,13 @@ class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUBaseWeapon
     GENERATED_BODY()
 
 public:
+    ASTURifleWeapon();
     virtual void StartFire() override;
     virtual void StopFire() override;
 
 protected:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
-    float RevolutionsPerMinute = 600.0f;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
-    float BulletSpread = 1.5f;
-
     virtual void MakeShot() override;
+    void MakeDamage(FHitResult& HitResult) const;
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
 
 private:

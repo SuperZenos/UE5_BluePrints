@@ -19,15 +19,33 @@ public:
 
     void SetShotDirection(const FVector& Direction);
 
+    APlayerController* ASTUProjectile::GetPlayerController() const;
+
 protected:
-    UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+    UPROPERTY(VisibleAnywhere, Category = "Component")
     USphereComponent* CollisionComponent;
 
-    UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+    UPROPERTY(VisibleAnywhere, Category = "Component")
     UProjectileMovementComponent* MovementComponent;
+
+    UPROPERTY(EditDefaultsOnly, Category = "ProjectileParams")
+    float DamageRadius = 200.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "ProjectileParams")
+    float DamageAmount = 50.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "ProjectileParams")
+    bool bDoFullDamage = false;
+
+    UPROPERTY(EditDefaultsOnly, Category = "ProjectileParams")
+    float LifeSpan = 5.0f;
 
     virtual void BeginPlay() override;
 
 private:
     FVector ShotDirection = FVector::ZeroVector;
+
+    UFUNCTION()
+    void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
+        const FHitResult& Hit);
 };
