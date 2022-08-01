@@ -20,6 +20,8 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 
 public:
     ASTUBaseCharacter(const FObjectInitializer& ObjInit);
+    void PlayEquipAnimMontage();
+    const UAnimMontage* GetEquipAnimMontage() { return EquipAnimMontage; }
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -37,8 +39,11 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUWeaponComponent* WeaponComponent;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Movement")
+    UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* DeathAnimMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UAnimMontage* EquipAnimMontage;
 
     UPROPERTY(EditDefaultsOnly, Category = "Damage")
     float LifeSpanOnDeath = 3.0f;

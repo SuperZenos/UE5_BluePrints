@@ -46,4 +46,7 @@ private:
 
     void SpawnWeapons();
     void EquipWeapon(int32 WeaponIndex);
+    void PlayEquipAnimMontage();
+    void InitAnimations();
+    void OnEquipFinished(USkeletalMeshComponent* MeshComp);
 };
