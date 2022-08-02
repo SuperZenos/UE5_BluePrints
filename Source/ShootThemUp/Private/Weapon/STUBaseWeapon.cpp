@@ -7,13 +7,14 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogSTUBaseWeapon, Display, All)
+DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, Display, All)
 
 ASTUBaseWeapon::ASTUBaseWeapon()
 {
     PrimaryActorTick.bCanEverTick = false;
     WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
     SetRootComponent(WeaponMesh);
+
 }
 
 void ASTUBaseWeapon::BeginPlay()
@@ -21,6 +22,8 @@ void ASTUBaseWeapon::BeginPlay()
     Super::BeginPlay();
 
     check(WeaponMesh);
+
+    CurrentAmmo = DefaultAmmo;
 }
 
 void ASTUBaseWeapon::StartFire() {}
@@ -98,4 +101,49 @@ bool ASTUBaseWeapon::bIsHitValid(FHitResult& HitResult, const FVector& TraceStar
     if (FMath::RadiansToDegrees(ShootSingle) < 60)
         return true;
     return false;
+}
+
+void ASTUBaseWeapon::DecreaseAmmo()
+{
+    CurrentAmmo.BulletsInClip -= 1;
+    LogAmmo();
+
+    if (bIsClipEmpty() && bCanReload())
+        Reload();
+}
+
+bool ASTUBaseWeapon::bIsAmmoEmpty() const
+{
+    return !CurrentAmmo.bInfinite && bIsClipEmpty() && CurrentAmmo.SpareBullets == 0;
+}
+
+bool ASTUBaseWeapon::bIsClipEmpty() const
+{
+    return CurrentAmmo.BulletsInClip == 0;
+}
+
+bool ASTUBaseWeapon::bCanReload() const
+{
+    return (CurrentAmmo.bInfinite || CurrentAmmo.SpareBullets != 0) && CurrentAmmo.BulletsInClip != CurrentAmmo.CapacityOfClip;
+}
+
+void ASTUBaseWeapon::Reload()
+{
+    if (CurrentAmmo.bInfinite == true)
+        CurrentAmmo.BulletsInClip = CurrentAmmo.CapacityOfClip;
+    else
+    {
+        int32 ReloadBullets = FMath::Min(CurrentAmmo.CapacityOfClip - CurrentAmmo.BulletsInClip, CurrentAmmo.SpareBullets);
+        CurrentAmmo.BulletsInClip = CurrentAmmo.BulletsInClip + ReloadBullets;
+        CurrentAmmo.SpareBullets = CurrentAmmo.SpareBullets - ReloadBullets;
+    }
+    UE_LOG(LogBaseWeapon, Display, TEXT("Reload"));
+    LogAmmo();
+}
+
+void ASTUBaseWeapon::LogAmmo()
+{
+    FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.BulletsInClip) + "/";
+    AmmoInfo += CurrentAmmo.bInfinite ? "Infinite" : FString::FromInt(CurrentAmmo.SpareBullets);
+    UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
 }
