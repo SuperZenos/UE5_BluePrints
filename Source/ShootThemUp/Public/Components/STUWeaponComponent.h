@@ -43,10 +43,14 @@ private:
     TArray<ASTUBaseWeapon*> Weapons;
 
     int32 CurrentWeaponIndex = 0;
+    bool bEquipAnimInProgress = false;
 
     void SpawnWeapons();
     void EquipWeapon(int32 WeaponIndex);
     void PlayEquipAnimMontage();
     void InitAnimations();
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+
+    bool bCanEquip() const;
+    bool bCanFire() const;
 };
