@@ -15,6 +15,7 @@ class SHOOTTHEMUP_API ASTULauncherWeapon : public ASTUBaseWeapon
 
 public:
     virtual void StartFire() override;
+    virtual void Reload() override;
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "WeaponParams")

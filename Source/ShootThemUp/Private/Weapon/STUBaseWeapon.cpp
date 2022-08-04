@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
+#include "Player/STUBaseCharacter.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, Display, All)
 
@@ -26,9 +27,17 @@ void ASTUBaseWeapon::BeginPlay()
     CurrentAmmo = DefaultAmmo;
 }
 
-void ASTUBaseWeapon::StartFire() {}
+void ASTUBaseWeapon::StartFire()
+{
+    MakeShot();
+    float TimerBetweenShots = 60.0f / RevolutionsPerMinute;
+    GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimerBetweenShots, true);
+}
 
-void ASTUBaseWeapon::StopFire() {}
+void ASTUBaseWeapon::StopFire()
+{
+    GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+}
 
 void ASTUBaseWeapon::MakeShot() {}
 
@@ -129,6 +138,10 @@ bool ASTUBaseWeapon::bCanReload() const
 
 void ASTUBaseWeapon::Reload()
 {
+    if (!bCanReload())
+        return;
+
+    StopFire();
     if (CurrentAmmo.bInfinite == true)
         CurrentAmmo.BulletsInClip = CurrentAmmo.CapacityOfClip;
     else

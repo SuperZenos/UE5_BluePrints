@@ -10,7 +10,6 @@
 #include "Components/STUWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogSTUBaseCharacter, Display, All)
 
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -52,7 +51,6 @@ void ASTUBaseCharacter::BeginPlay()
     HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
 
     LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
-
 }
 
 void ASTUBaseCharacter::Tick(float DeltaTime)
@@ -79,6 +77,7 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &USTUWeaponComponent::StartFire);
     PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
     PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &USTUWeaponComponent::NextWeapon);
+    PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
 }
 
 float ASTUBaseCharacter::GetMovementDirection() const
@@ -150,4 +149,14 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
 void ASTUBaseCharacter::PlayEquipAnimMontage()
 {
     PlayAnimMontage(EquipAnimMontage);
+}
+
+void ASTUBaseCharacter::PlayRifleReloadAnimMontage()
+{
+    PlayAnimMontage(RifleReloadAnimMontage);
+}
+
+void ASTUBaseCharacter::PlayLauncherReloadAnimMontage()
+{
+    PlayAnimMontage(LauncherReloadAnimMontage);
 }

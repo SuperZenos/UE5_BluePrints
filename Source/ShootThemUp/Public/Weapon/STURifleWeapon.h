@@ -13,14 +13,10 @@ class SHOOTTHEMUP_API ASTURifleWeapon : public ASTUBaseWeapon
 
 public:
     ASTURifleWeapon();
-    virtual void StartFire() override;
-    virtual void StopFire() override;
+    virtual void Reload() override;
 
 protected:
     virtual void MakeShot() override;
     void MakeDamage(FHitResult& HitResult) const;
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
-
-private:
-    FTimerHandle ShotTimerHandle;
 };

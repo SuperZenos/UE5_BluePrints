@@ -6,12 +6,22 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTUBaseCharacter, Display, All);
+
 class UCameraComponent;
 class USpringArmComponent;
 class USTUHealthComponent;
 class UTextRenderComponent;
 class USTUBaseWeapon;
 class USTUWeaponComponent;
+
+enum EAnimMontageName
+{
+    DeathAnimMontage,
+    EquipAnimMontage,
+    RifleReloadAnimMontage,
+    LauncherReloadAnimMontage
+};
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
@@ -21,7 +31,8 @@ class SHOOTTHEMUP_API ASTUBaseCharacter : public ACharacter
 public:
     ASTUBaseCharacter(const FObjectInitializer& ObjInit);
     void PlayEquipAnimMontage();
-    const UAnimMontage* GetEquipAnimMontage() { return EquipAnimMontage; }
+    void PlayRifleReloadAnimMontage();
+    void PlayLauncherReloadAnimMontage();
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -44,6 +55,12 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage* EquipAnimMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UAnimMontage* RifleReloadAnimMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Animation")
+    UAnimMontage* LauncherReloadAnimMontage;
 
     UPROPERTY(EditDefaultsOnly, Category = "Damage")
     float LifeSpanOnDeath = 3.0f;
@@ -82,4 +99,47 @@ private:
 
     UFUNCTION()
     void OnGroundLanded(const FHitResult& Hit);
+
+public:
+    template <typename T> T* FindAnimNotifyByClass(EAnimMontageName AnimMontageName)
+    {
+        TArray<FAnimNotifyEvent> AnimNotifyEvents;
+        switch (AnimMontageName)
+        {
+        case EAnimMontageName::DeathAnimMontage:
+            if (!DeathAnimMontage)
+                return nullptr;
+            AnimNotifyEvents = DeathAnimMontage->Notifies;
+            break;
+
+        case EAnimMontageName::EquipAnimMontage:
+            if (!EquipAnimMontage)
+                return nullptr;
+            AnimNotifyEvents = EquipAnimMontage->Notifies;
+            break;
+
+        case EAnimMontageName::RifleReloadAnimMontage:
+            if (!RifleReloadAnimMontage)
+                return nullptr;
+            AnimNotifyEvents = RifleReloadAnimMontage->Notifies;
+            break;
+
+        case EAnimMontageName::LauncherReloadAnimMontage:
+            if (!LauncherReloadAnimMontage)
+                return nullptr;
+            AnimNotifyEvents = LauncherReloadAnimMontage->Notifies;
+            break;
+        }
+
+        for (auto NotifyEvent : AnimNotifyEvents)
+        {
+            auto ActionFinishedNotify = Cast<T>(NotifyEvent.Notify);
+            if (ActionFinishedNotify)
+            {
+                return ActionFinishedNotify;
+            }
+        }
+
+        return nullptr;
+    }
 };

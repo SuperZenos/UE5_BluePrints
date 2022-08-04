@@ -3,27 +3,16 @@
 #include "Weapon/STURifleWeapon.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Player/STUBaseCharacter.h"
 
 ASTURifleWeapon::ASTURifleWeapon()
 {
     BulletSpread = 1.5f;
 }
 
-void ASTURifleWeapon::StartFire()
-{
-    MakeShot();
-    float TimerBetweenShots = 60.0f / RevolutionsPerMinute;
-    GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTURifleWeapon::MakeShot, TimerBetweenShots, true);
-}
-
-void ASTURifleWeapon::StopFire()
-{
-    GetWorldTimerManager().ClearTimer(ShotTimerHandle);
-}
-
 void ASTURifleWeapon::MakeShot()
 {
-    if (!GetWorld()||bIsAmmoEmpty())
+    if (!GetWorld() || bIsAmmoEmpty())
     {
         StopFire();
         return;
@@ -77,4 +66,15 @@ bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
     const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);
     TraceEnd = ViewLocation + ShootDirection * ShootDistance;
     return true;
+}
+
+void ASTURifleWeapon::Reload()
+{
+    Super::Reload();
+
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!Player)
+        return;
+
+    Player->PlayRifleReloadAnimMontage();
 }

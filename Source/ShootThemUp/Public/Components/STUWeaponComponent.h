@@ -19,6 +19,7 @@ public:
     void StartFire();
     void StopFire();
     void NextWeapon();
+    void Reload();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
@@ -43,14 +44,16 @@ private:
     TArray<ASTUBaseWeapon*> Weapons;
 
     int32 CurrentWeaponIndex = 0;
+
     bool bEquipAnimInProgress = false;
+    bool bReloadAnimInProgress = false;
 
     void SpawnWeapons();
     void EquipWeapon(int32 WeaponIndex);
-    void PlayEquipAnimMontage();
     void InitAnimations();
-    void OnEquipFinished(USkeletalMeshComponent* MeshComp);
 
-    bool bCanEquip() const;
-    bool bCanFire() const;
+    void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+    void OnReloadFinished(USkeletalMeshComponent* MeshComp);
+
+    bool bCanDoAction() const;
 };

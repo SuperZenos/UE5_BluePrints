@@ -5,6 +5,9 @@
 #include "GameFramework/Character.h"
 #include "Player/STUBaseCharacter.h"
 #include "Animations/STUEquipAnimNotify.h"
+#include "Weapon/STURifleWeapon.h"
+#include "Weapon/STULauncherWeapon.h"
+#include "Animations/STUReloadAnimNotify.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, Display, All);
 
@@ -64,7 +67,7 @@ void USTUWeaponComponent::AttachWeaponToSocket(USceneComponent* SceneComponent, 
 
 void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 {
-    ACharacter* Character = Cast<ACharacter>(GetOwner());
+    ASTUBaseCharacter* Character = Cast<ASTUBaseCharacter>(GetOwner());
     if (!Character)
         return;
 
@@ -79,16 +82,7 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 
     bEquipAnimInProgress = true;
 
-    PlayEquipAnimMontage();
-}
-
-void USTUWeaponComponent::PlayEquipAnimMontage()
-{
-    auto Player = Cast<ASTUBaseCharacter>(CurrentWeapon->GetCharacter());
-    if (Player)
-    {
-        Player->PlayEquipAnimMontage();
-    }
+    Character->PlayEquipAnimMontage();
 }
 
 void USTUWeaponComponent::InitAnimations()
@@ -97,44 +91,51 @@ void USTUWeaponComponent::InitAnimations()
     if (!Player)
         return;
 
-    auto EquipAnimMontage = Player->GetEquipAnimMontage();
-    if (!EquipAnimMontage)
-        return;
-
-    const auto NotifyEvents = EquipAnimMontage->Notifies;
-    for (auto NotifyEvent : NotifyEvents)
+    auto EquipFinishedNotify = Player->FindAnimNotifyByClass<USTUEquipAnimNotify>(EAnimMontageName ::EquipAnimMontage);
+    if (EquipFinishedNotify)
     {
-        auto EquipFinishedNotify = Cast<USTUEquipAnimNotify>(NotifyEvent.Notify);
-        if (EquipFinishedNotify)
-        {
-            EquipFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
-            break;
-        }
+        EquipFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
+    }
+
+    auto RifleReloadFinishedNotify = Player->FindAnimNotifyByClass<USTUReloadAnimNotify>(EAnimMontageName ::RifleReloadAnimMontage);
+    if (RifleReloadFinishedNotify)
+    {
+        RifleReloadFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
+    }
+
+    auto LauncherReloadFinishedNotify = Player->FindAnimNotifyByClass<USTUReloadAnimNotify>(EAnimMontageName ::LauncherReloadAnimMontage);
+    if (LauncherReloadFinishedNotify)
+    {
+        LauncherReloadFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
     }
 }
 
 void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
 {
-    bEquipAnimInProgress = false;
-
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player || MeshComp->GetOwner() == Player)
+    if (!Player || !(MeshComp->GetOwner() == Player))
         return;
+
+    bEquipAnimInProgress = false;
 }
 
-bool USTUWeaponComponent::bCanEquip() const
+void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
 {
-    return !bEquipAnimInProgress;
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!Player || !(MeshComp->GetOwner() == Player))
+        return;
+
+    bReloadAnimInProgress = false;
 }
 
-bool USTUWeaponComponent::bCanFire() const
+bool USTUWeaponComponent::bCanDoAction() const
 {
-    return !bEquipAnimInProgress && CurrentWeapon;
+    return !bEquipAnimInProgress && !bReloadAnimInProgress && CurrentWeapon;
 }
 
 void USTUWeaponComponent::StartFire()
 {
-    if (!bCanFire())
+    if (!bCanDoAction())
         return;
     CurrentWeapon->StartFire();
 }
@@ -148,9 +149,22 @@ void USTUWeaponComponent::StopFire()
 
 void USTUWeaponComponent::NextWeapon()
 {
-    if (!bCanEquip())
+    if (!bCanDoAction())
         return;
 
     CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
     EquipWeapon(CurrentWeaponIndex);
+}
+
+void USTUWeaponComponent::Reload()
+{
+    if (!CurrentWeapon || !bCanDoAction())
+        return;
+
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!Player)
+        return;
+
+    bReloadAnimInProgress = true;
+    CurrentWeapon->Reload();
 }

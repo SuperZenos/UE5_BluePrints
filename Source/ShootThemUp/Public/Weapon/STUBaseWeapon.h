@@ -50,6 +50,10 @@ public:
 
     virtual void StartFire();
     virtual void StopFire();
+    bool bIsAmmoEmpty() const;
+    bool bIsClipEmpty() const;
+    bool bCanReload() const;
+    virtual void Reload();
 
     void OnCharacterDeath();
 
@@ -57,6 +61,7 @@ public:
     APlayerController* GetPlayerController() const;
     bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
     FVector GetMuzzleWorldLocation() const;
+
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -83,6 +88,8 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
     float BulletSpread = 0.0f;
 
+    FTimerHandle ShotTimerHandle;
+
     virtual void BeginPlay() override;
     virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
 
@@ -91,10 +98,6 @@ protected:
     virtual bool bIsHitValid(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
 
     void DecreaseAmmo();
-    bool bIsAmmoEmpty() const;
-    bool bIsClipEmpty() const;
-    bool bCanReload() const;
-    void Reload();
     void LogAmmo();
 
 private:

@@ -2,6 +2,7 @@
 
 #include "Weapon/STULauncherWeapon.h"
 #include "Weapon/STUProjectile.h"
+#include "Player/STUBaseCharacter.h"
 
 void ASTULauncherWeapon::StartFire()
 {
@@ -33,4 +34,15 @@ void ASTULauncherWeapon::MakeShot()
         Projectile->FinishSpawning(SpawnTransform);
     }
     DecreaseAmmo();
+}
+
+void ASTULauncherWeapon::Reload()
+{
+    Super::Reload();
+
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!Player)
+        return;
+
+    Player->PlayLauncherReloadAnimMontage();
 }
