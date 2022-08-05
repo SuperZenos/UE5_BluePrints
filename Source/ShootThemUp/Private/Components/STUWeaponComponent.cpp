@@ -20,6 +20,8 @@ void USTUWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
 
+    checkf(WeaponClasses.Num() <= 2, TEXT("Our character can hold only less than 2 weapon items."));
+
     InitAnimations();
     SpawnWeapons();
     EquipWeapon(CurrentWeaponIndex);
@@ -96,18 +98,24 @@ void USTUWeaponComponent::InitAnimations()
     {
         EquipFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipFinished);
     }
+    else
+        UE_LOG(LogWeaponComponent, Error, TEXT("EquipAnimMontage is forgotten to set."));
 
     auto RifleReloadFinishedNotify = Player->FindAnimNotifyByClass<USTUReloadAnimNotify>(EAnimMontageName ::RifleReloadAnimMontage);
     if (RifleReloadFinishedNotify)
     {
         RifleReloadFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
     }
+    else
+        UE_LOG(LogWeaponComponent, Error, TEXT("RifleReloadAnimMontage is forgotten to set."));
 
     auto LauncherReloadFinishedNotify = Player->FindAnimNotifyByClass<USTUReloadAnimNotify>(EAnimMontageName ::LauncherReloadAnimMontage);
     if (LauncherReloadFinishedNotify)
     {
         LauncherReloadFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
     }
+    else
+        UE_LOG(LogWeaponComponent, Error, TEXT("LauncherReloadAnimMontage is forgotten to set."));
 }
 
 void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)

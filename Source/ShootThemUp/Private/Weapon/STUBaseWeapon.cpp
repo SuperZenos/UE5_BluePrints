@@ -23,12 +23,21 @@ void ASTUBaseWeapon::BeginPlay()
     Super::BeginPlay();
 
     check(WeaponMesh);
+    checkf(DefaultAmmo.BulletsInClip >= 0, TEXT("Bullets count count't be less than zero."));
+    checkf(DefaultAmmo.CapacityOfClip >= 0, TEXT("Capacity of clip count't be less than zero."));
+    checkf(DefaultAmmo.SpareBullets >= 0, TEXT("Spare bullets count't be less than zero."));
 
     CurrentAmmo = DefaultAmmo;
 }
 
 void ASTUBaseWeapon::StartFire()
 {
+    if (bIsClipEmpty() && bCanReload())
+    {
+        Reload();
+        return;
+    }
+
     MakeShot();
     float TimerBetweenShots = 60.0f / RevolutionsPerMinute;
     GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimerBetweenShots, true);

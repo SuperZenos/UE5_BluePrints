@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "STUCoreTypes.h"
 #include "STUBaseCharacter.generated.h"
-
-DEFINE_LOG_CATEGORY_STATIC(LogSTUBaseCharacter, Display, All);
 
 class UCameraComponent;
 class USpringArmComponent;
