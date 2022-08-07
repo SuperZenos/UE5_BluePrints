@@ -144,7 +144,11 @@ bool USTUWeaponComponent::bCanDoAction() const
 void USTUWeaponComponent::StartFire()
 {
     if (!bCanDoAction())
+    {
+        UE_LOG(LogWeaponComponent, Display, TEXT("StartFireFailed"))
         return;
+    }
+        
     CurrentWeapon->StartFire();
 }
 
