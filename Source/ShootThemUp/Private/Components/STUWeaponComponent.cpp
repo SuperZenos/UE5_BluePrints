@@ -4,12 +4,12 @@
 #include "Weapon/STUBaseWeapon.h"
 #include "GameFramework/Character.h"
 #include "Player/STUBaseCharacter.h"
-#include "Animations/STUEquipAnimNotify.h"
 #include "Weapon/STURifleWeapon.h"
 #include "Weapon/STULauncherWeapon.h"
+#include "Animations/STUEquipStartNotify.h"
+#include "Animations/STUEquipAnimNotify.h"
+#include "Animations/STUReloadStartNotify.h"
 #include "Animations/STUReloadAnimNotify.h"
-
-DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, Display, All);
 
 USTUWeaponComponent::USTUWeaponComponent()
 {
@@ -93,6 +93,14 @@ void USTUWeaponComponent::InitAnimations()
     if (!Player)
         return;
 
+    auto EquipStartNotify = Player->FindAnimNotifyByClass<USTUEquipStartNotify>(EAnimMontageName ::EquipAnimMontage);
+    if (EquipStartNotify)
+    {
+        EquipStartNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnEquipStart);
+    }
+    else
+        UE_LOG(LogWeaponComponent, Error, TEXT("EquipAnimMontage is forgotten to set."));
+
     auto EquipFinishedNotify = Player->FindAnimNotifyByClass<USTUEquipAnimNotify>(EAnimMontageName ::EquipAnimMontage);
     if (EquipFinishedNotify)
     {
@@ -100,6 +108,14 @@ void USTUWeaponComponent::InitAnimations()
     }
     else
         UE_LOG(LogWeaponComponent, Error, TEXT("EquipAnimMontage is forgotten to set."));
+
+    auto RifleReloadStartNotify = Player->FindAnimNotifyByClass<USTUReloadStartNotify>(EAnimMontageName ::RifleReloadAnimMontage);
+    if (RifleReloadStartNotify)
+    {
+        RifleReloadStartNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadStart);
+    }
+    else
+        UE_LOG(LogWeaponComponent, Error, TEXT("RifleReloadAnimMontage is forgotten to set."));
 
     auto RifleReloadFinishedNotify = Player->FindAnimNotifyByClass<USTUReloadAnimNotify>(EAnimMontageName ::RifleReloadAnimMontage);
     if (RifleReloadFinishedNotify)
@@ -109,6 +125,14 @@ void USTUWeaponComponent::InitAnimations()
     else
         UE_LOG(LogWeaponComponent, Error, TEXT("RifleReloadAnimMontage is forgotten to set."));
 
+    auto LauncherReloadStartNotify = Player->FindAnimNotifyByClass<USTUReloadStartNotify>(EAnimMontageName ::LauncherReloadAnimMontage);
+    if (LauncherReloadStartNotify)
+    {
+        LauncherReloadStartNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadStart);
+    }
+    else
+        UE_LOG(LogWeaponComponent, Error, TEXT("LauncherReloadAnimMontage is forgotten to set."));
+
     auto LauncherReloadFinishedNotify = Player->FindAnimNotifyByClass<USTUReloadAnimNotify>(EAnimMontageName ::LauncherReloadAnimMontage);
     if (LauncherReloadFinishedNotify)
     {
@@ -116,6 +140,15 @@ void USTUWeaponComponent::InitAnimations()
     }
     else
         UE_LOG(LogWeaponComponent, Error, TEXT("LauncherReloadAnimMontage is forgotten to set."));
+}
+
+void USTUWeaponComponent::OnEquipStart(USkeletalMeshComponent* MeshComp)
+{
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!Player || !(MeshComp->GetOwner() == Player))
+        return;
+
+    bEquipAnimInProgress = true;
 }
 
 void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
@@ -127,12 +160,22 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
     bEquipAnimInProgress = false;
 }
 
+void USTUWeaponComponent::OnReloadStart(USkeletalMeshComponent* MeshComp)
+{
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!Player || !(MeshComp->GetOwner() == Player))
+        return;
+
+    bReloadAnimInProgress = true;
+}
+
 void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
 {
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
     if (!Player || !(MeshComp->GetOwner() == Player))
         return;
 
+    ChangeBullets();
     bReloadAnimInProgress = false;
 }
 
@@ -144,11 +187,8 @@ bool USTUWeaponComponent::bCanDoAction() const
 void USTUWeaponComponent::StartFire()
 {
     if (!bCanDoAction())
-    {
-        UE_LOG(LogWeaponComponent, Display, TEXT("StartFireFailed"))
         return;
-    }
-        
+
     CurrentWeapon->StartFire();
 }
 
@@ -170,13 +210,36 @@ void USTUWeaponComponent::NextWeapon()
 
 void USTUWeaponComponent::Reload()
 {
-    if (!CurrentWeapon || !bCanDoAction())
+    if (!bCanDoAction())
         return;
 
-    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player)
-        return;
-
-    bReloadAnimInProgress = true;
     CurrentWeapon->Reload();
+}
+
+void USTUWeaponComponent::ChangeBullets()
+{
+    if (!CurrentWeapon)
+        return;
+
+    CurrentWeapon->ChangeBullets();
+}
+
+bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
+{
+    if (CurrentWeapon)
+    {
+        UIData = CurrentWeapon->GetUIData();
+        return true;
+    }
+    return false;
+}
+
+bool USTUWeaponComponent::GetWeaponAmmoData(FAmmoData& AmmoData) const
+{
+    if (CurrentWeapon)
+    {
+        AmmoData = CurrentWeapon->GetAmmoData();
+        return true;
+    }
+    return false;
 }

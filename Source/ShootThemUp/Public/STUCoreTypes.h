@@ -3,6 +3,9 @@
 #include "STUCoreTypes.generated.h"
 //weapon
 
+DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, Display, All);
+DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, Display, All);
+
 USTRUCT(BlueprintType)
 struct FAmmoData
 {
@@ -34,6 +37,18 @@ public:
         SpareBullets = Total;
         bInfinite = Infinite;
     }
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponUIData
+{
+    GENERATED_USTRUCT_BODY()
+public:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* MainIcon;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    UTexture2D* CrossHair;
 };
 
 //health

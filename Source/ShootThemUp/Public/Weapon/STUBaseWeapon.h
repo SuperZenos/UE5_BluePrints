@@ -22,6 +22,7 @@ public:
     bool bIsClipEmpty() const;
     bool bCanReload() const;
     virtual void Reload();
+    void ChangeBullets();
 
     void OnCharacterDeath();
 
@@ -30,6 +31,8 @@ public:
     bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
     FVector GetMuzzleWorldLocation() const;
 
+    FWeaponUIData GetUIData() const { return UIData; }
+    FAmmoData GetAmmoData() const { return CurrentAmmo; }
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -39,7 +42,7 @@ protected:
     FName MuzzleSocketName = "MuzzleSocket";
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
-    FAmmoData DefaultAmmo{28, 28, 300, false};
+    FAmmoData DefaultAmmo{0, 28, 300, false};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
     float ShootDistance = 1500.0f;
@@ -55,6 +58,9 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "WeaponParams")
     float BulletSpread = 0.0f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FWeaponUIData UIData;
 
     FTimerHandle ShotTimerHandle;
 

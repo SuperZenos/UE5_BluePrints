@@ -70,6 +70,9 @@ bool ASTURifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 
 void ASTURifleWeapon::Reload()
 {
+    if (!bCanReload())
+        return;
+
     Super::Reload();
 
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());

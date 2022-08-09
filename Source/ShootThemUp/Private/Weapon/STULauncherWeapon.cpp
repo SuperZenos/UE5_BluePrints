@@ -38,6 +38,9 @@ void ASTULauncherWeapon::MakeShot()
 
 void ASTULauncherWeapon::Reload()
 {
+    if (!bCanReload())
+        return;
+
     Super::Reload();
 
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());

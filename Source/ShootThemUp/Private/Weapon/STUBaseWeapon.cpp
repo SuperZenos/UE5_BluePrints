@@ -8,14 +8,11 @@
 #include "GameFramework/Character.h"
 #include "Player/STUBaseCharacter.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, Display, All)
-
 ASTUBaseWeapon::ASTUBaseWeapon()
 {
     PrimaryActorTick.bCanEverTick = false;
     WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
     SetRootComponent(WeaponMesh);
-
 }
 
 void ASTUBaseWeapon::BeginPlay()
@@ -27,6 +24,7 @@ void ASTUBaseWeapon::BeginPlay()
     checkf(DefaultAmmo.CapacityOfClip >= 0, TEXT("Capacity of clip count't be less than zero."));
     checkf(DefaultAmmo.SpareBullets >= 0, TEXT("Spare bullets count't be less than zero."));
 
+    DefaultAmmo.BulletsInClip = DefaultAmmo.CapacityOfClip;
     CurrentAmmo = DefaultAmmo;
 }
 
@@ -147,10 +145,12 @@ bool ASTUBaseWeapon::bCanReload() const
 
 void ASTUBaseWeapon::Reload()
 {
-    if (!bCanReload())
-        return;
-
     StopFire();
+    UE_LOG(LogBaseWeapon, Display, TEXT("Reload"));
+}
+
+void ASTUBaseWeapon::ChangeBullets()
+{
     if (CurrentAmmo.bInfinite == true)
         CurrentAmmo.BulletsInClip = CurrentAmmo.CapacityOfClip;
     else
@@ -159,7 +159,6 @@ void ASTUBaseWeapon::Reload()
         CurrentAmmo.BulletsInClip = CurrentAmmo.BulletsInClip + ReloadBullets;
         CurrentAmmo.SpareBullets = CurrentAmmo.SpareBullets - ReloadBullets;
     }
-    UE_LOG(LogBaseWeapon, Display, TEXT("Reload"));
     LogAmmo();
 }
 
