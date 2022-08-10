@@ -3,18 +3,11 @@
 #include "UI/STUPlayerHudWidget.h"
 #include "Components/STUHealthComponent.h"
 #include "Components/STUWeaponComponent.h"
+#include "Player/STUBaseCharacter.h"
 
 float USTUPlayerHudWidget::GetHealthPercent() const
 {
-    auto Player = GetOwningPlayerPawn();
-    if (!Player)
-        return 0.0f;
-
-    auto Component = Player->GetComponentByClass(USTUHealthComponent::StaticClass());
-    if (!Component)
-        return 0.0f;
-
-    auto HealthComponent = Cast<USTUHealthComponent>(Component);
+    auto HealthComponent = GetComponentByClass<USTUHealthComponent>();
     if (!HealthComponent)
         return 0.0f;
 
@@ -23,32 +16,24 @@ float USTUPlayerHudWidget::GetHealthPercent() const
 
 bool USTUPlayerHudWidget::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 {
-    auto WeaponComponent = GetWeaponComponent();
-    if (!WeaponComponent)
-        return false;
-
-    return WeaponComponent->GetWeaponUIData(UIData);
+    auto WeaponComponent = GetComponentByClass<USTUWeaponComponent>();
+    return WeaponComponent && WeaponComponent->GetWeaponUIData(UIData);
 }
 
 bool USTUPlayerHudWidget::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 {
-    auto WeaponComponent = GetWeaponComponent();
-    if (!WeaponComponent)
-        return false;
-
-    return WeaponComponent->GetWeaponAmmoData(AmmoData);
+    auto WeaponComponent = GetComponentByClass<USTUWeaponComponent>();
+    return WeaponComponent && WeaponComponent->GetWeaponAmmoData(AmmoData);
 }
 
-USTUWeaponComponent* USTUPlayerHudWidget::GetWeaponComponent() const
+bool USTUPlayerHudWidget::bIsPlayerAlive() const
 {
-    auto Player = GetOwningPlayerPawn();
-    if (!Player)
-        return nullptr;
+    auto HealthComponent = GetComponentByClass<USTUHealthComponent>();
+    return HealthComponent && !HealthComponent->IsDead();
+}
 
-    auto Component = Player->GetComponentByClass(USTUWeaponComponent::StaticClass());
-    if (!Component)
-        return nullptr;
-
-    auto WeaponComponent = Cast<USTUWeaponComponent>(Component);
-    return WeaponComponent;
+bool USTUPlayerHudWidget::bIsPlayerSpectating() const
+{
+    auto Player = GetOwningPlayer();
+    return Player && Player->GetStateName() == NAME_Spectating;
 }

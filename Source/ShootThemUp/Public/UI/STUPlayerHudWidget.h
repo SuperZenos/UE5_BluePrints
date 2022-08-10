@@ -23,6 +23,25 @@ public:
     UFUNCTION(BlueprintCallable)
     bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
+    UFUNCTION(BlueprintCallable)
+    bool bIsPlayerAlive() const;
+
+    UFUNCTION(BlueprintCallable)
+    bool bIsPlayerSpectating() const;
+
 protected:
-    USTUWeaponComponent* GetWeaponComponent() const;
+    template<typename T>
+    T* GetComponentByClass() const
+    {
+        auto Player = GetOwningPlayerPawn();
+        if (!Player)
+            return nullptr;
+
+        auto Component = Player->GetComponentByClass(T::StaticClass());
+        if (!Component)
+            return nullptr;
+
+        auto WeaponComponent = Cast<T>(Component);
+        return WeaponComponent;
+    }
 };
