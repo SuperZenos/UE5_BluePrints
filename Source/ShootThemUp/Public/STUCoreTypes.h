@@ -62,4 +62,10 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent
 
 //character
 
-DEFINE_LOG_CATEGORY_STATIC(LogSTUBaseCharacter, Display, All);
+DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, Display, All);
+
+//pickup
+
+DEFINE_LOG_CATEGORY_STATIC(LogBasePickup, Display, All);
+DEFINE_LOG_CATEGORY_STATIC(LogAmmoPickup, Display, All);
+DEFINE_LOG_CATEGORY_STATIC(LogHealthPickup, Display, All);

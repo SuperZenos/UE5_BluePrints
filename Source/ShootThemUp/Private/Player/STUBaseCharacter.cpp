@@ -138,7 +138,7 @@ void ASTUBaseCharacter::OnHealthChanged(float Health)
 void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
 {
     const auto FallVelocityZ = GetVelocity().Z;
-    UE_LOG(LogSTUBaseCharacter, Display, TEXT("On landed: %f"), FallVelocityZ);
+    UE_LOG(LogBaseCharacter, Display, TEXT("On landed: %f"), FallVelocityZ);
 
     if (-FallVelocityZ < LandedDamageVelocity.X)
         return;
