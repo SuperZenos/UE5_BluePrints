@@ -243,3 +243,15 @@ bool USTUWeaponComponent::GetWeaponAmmoData(FAmmoData& AmmoData) const
     }
     return false;
 }
+
+bool USTUWeaponComponent::TryAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 BulletsAmount)
+{
+    for (auto Weapon : Weapons)
+    {
+        if (Weapon && Weapon->IsA(WeaponType))
+        {
+            return Weapon->TryAddAmmo(BulletsAmount);
+        }
+    }
+    return false;
+}

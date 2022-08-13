@@ -21,7 +21,7 @@ protected:
     UPROPERTY(VisibleAnywhere, Category = "Pickup")
     USphereComponent* CollisionComponent;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Pickup")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
     float RespawnTime = 5.0f;
 
     virtual void BeginPlay() override;

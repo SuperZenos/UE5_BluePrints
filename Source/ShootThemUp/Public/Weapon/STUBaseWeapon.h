@@ -18,11 +18,13 @@ public:
 
     virtual void StartFire();
     virtual void StopFire();
+
     bool bIsAmmoEmpty() const;
     bool bIsClipEmpty() const;
     bool bCanReload() const;
-    virtual void Reload();
     void ChangeBullets();
+    virtual void Reload();
+    virtual bool TryAddAmmo(int32 BulletsAmount);
 
     void OnCharacterDeath();
 

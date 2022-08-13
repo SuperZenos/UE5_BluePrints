@@ -18,7 +18,7 @@ public:
     FOnHealthChangedSignature OnHealthChanged;
 
     UFUNCTION(BlueprintCallable, Category = "Health")
-    bool IsDead() const { return Health == 0; }
+    bool bIsDead() const { return Health == 0; }
 
     UFUNCTION(BlueprintCallable, Category = "Health")
     float GetHealthPercent() { return Health / MaxHealth; }

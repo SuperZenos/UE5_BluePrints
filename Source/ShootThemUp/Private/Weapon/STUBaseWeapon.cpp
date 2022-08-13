@@ -149,6 +149,15 @@ void ASTUBaseWeapon::Reload()
     UE_LOG(LogBaseWeapon, Display, TEXT("Reload"));
 }
 
+bool ASTUBaseWeapon::TryAddAmmo(int32 BulletsAmount)
+{
+    if (CurrentAmmo.bInfinite || CurrentAmmo.SpareBullets == DefaultAmmo.SpareBullets)
+        return false;
+
+    CurrentAmmo.SpareBullets = FMath::Min(CurrentAmmo.SpareBullets + BulletsAmount, DefaultAmmo.SpareBullets);
+    return true;
+}
+
 void ASTUBaseWeapon::ChangeBullets()
 {
     if (CurrentAmmo.bInfinite == true)

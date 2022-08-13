@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "STUCoreTypes.h"
+#include "STUUtils.h"
 #include "STUPlayerHudWidget.generated.h"
 
 class USTUWeaponComponent;
@@ -28,20 +29,4 @@ public:
 
     UFUNCTION(BlueprintCallable)
     bool bIsPlayerSpectating() const;
-
-protected:
-    template<typename T>
-    T* GetComponentByClass() const
-    {
-        auto Player = GetOwningPlayerPawn();
-        if (!Player)
-            return nullptr;
-
-        auto Component = Player->GetComponentByClass(T::StaticClass());
-        if (!Component)
-            return nullptr;
-
-        auto WeaponComponent = Cast<T>(Component);
-        return WeaponComponent;
-    }
 };

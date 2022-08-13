@@ -26,6 +26,8 @@ public:
     bool GetWeaponUIData(FWeaponUIData& UIData) const;
     bool GetWeaponAmmoData(FAmmoData& AmmoData) const;
 
+    bool TryAddAmmo(TSubclassOf<ASTUBaseWeapon>WeaponType, int32 BulletsAmount);
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Weapon")
     TArray<TSubclassOf<ASTUBaseWeapon>> WeaponClasses;
