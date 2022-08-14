@@ -10,6 +10,18 @@ USTUHealthComponent::USTUHealthComponent()
     PrimaryComponentTick.bCanEverTick = false;
 }
 
+bool USTUHealthComponent::TryToGetHealthPickup(float HealthAmount)
+{
+    if (Health == MaxHealth)
+        return false;
+    else
+    {
+        Health = FMath::Clamp(Health + HealthAmount, 0, MaxHealth);
+        OnHealthChanged.Broadcast(Health);
+        return true;
+    }
+}
+
 // Called when the game starts
 void USTUHealthComponent::BeginPlay()
 {

@@ -25,6 +25,8 @@ public:
 
     float GetHealth() const { return Health; }
 
+    bool TryToGetHealthPickup(float HealthAmount);
+
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Base", meta = (Clampmin = "0.0", Clampmax = "1000.0"))
     float MaxHealth = 100.0f;
