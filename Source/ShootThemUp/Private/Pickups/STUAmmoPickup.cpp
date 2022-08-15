@@ -7,16 +7,13 @@
 
 bool ASTUAmmoPickup::GivePickupTo(APawn* PlayerPawn)
 {
-    if (!PlayerPawn)
-        return false;
+    if (!PlayerPawn) return false;
 
     auto HealthComponent = STUUtils::GetComponentByClass<USTUHealthComponent>(PlayerPawn);
-    if (!HealthComponent || HealthComponent->bIsDead())
-        return false;
+    if (!HealthComponent || HealthComponent->bIsDead()) return false;
 
     auto WeaponComponent = STUUtils::GetComponentByClass<USTUWeaponComponent>(PlayerPawn);
-    if (!WeaponComponent)
-        return false;
+    if (!WeaponComponent) return false;
 
     return WeaponComponent->TryAddAmmo(WeaponType, BulletsAmount);
 }

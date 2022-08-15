@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
+#include "Weapon/Components/STUWeaponFXComponent.h"
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -20,6 +21,8 @@ ASTUProjectile::ASTUProjectile()
     MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
     MovementComponent->InitialSpeed = 2000.0f;
     MovementComponent->ProjectileGravityScale = 0.0f;
+
+    WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
 }
 
 void ASTUProjectile::SetShotDirection(const FVector& Direction)
@@ -33,6 +36,7 @@ void ASTUProjectile::BeginPlay()
 
     check(MovementComponent);
     check(CollisionComponent);
+    check(WeaponFXComponent);
 
     MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
     CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
@@ -43,32 +47,30 @@ void ASTUProjectile::BeginPlay()
 void ASTUProjectile::OnProjectileHit(
     UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-    if (!GetWorld())
-        return;
+    if (!GetWorld()) return;
 
     MovementComponent->StopMovementImmediately();
 
     // MakeDMG
-    UGameplayStatics::ApplyRadialDamage(GetWorld(), //
-        DamageAmount,                               //
-        GetActorLocation(),                         //
-        DamageRadius,                               //
-        UDamageType::StaticClass(),                 //
-        {GetOwner()},                               //
-        this,                                       //
-        GetPlayerController(),                      //
+    UGameplayStatics::ApplyRadialDamage(GetWorld(),  //
+        DamageAmount,                                //
+        GetActorLocation(),                          //
+        DamageRadius,                                //
+        UDamageType::StaticClass(),                  //
+        {GetOwner()},                                //
+        this,                                        //
+        GetPlayerController(),                       //
         bDoFullDamage);
 
     DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
-
+    WeaponFXComponent->PlayImpactFX(Hit);
     Destroy();
 }
 
 APlayerController* ASTUProjectile::GetPlayerController() const
 {
     const auto Player = Cast<ACharacter>(GetOwner());
-    if (!Player)
-        return nullptr;
+    if (!Player) return nullptr;
     const auto Controller = Player->GetController<APlayerController>();
     return Controller;
 }

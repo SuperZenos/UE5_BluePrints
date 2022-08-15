@@ -100,34 +100,31 @@ private:
     void OnGroundLanded(const FHitResult& Hit);
 
 public:
-    template <typename T> T* FindAnimNotifyByClass(EAnimMontageName AnimMontageName)
+    template <typename T>
+    T* FindAnimNotifyByClass(EAnimMontageName AnimMontageName)
     {
         TArray<FAnimNotifyEvent> AnimNotifyEvents;
         switch (AnimMontageName)
         {
-        case EAnimMontageName::DeathAnimMontage:
-            if (!DeathAnimMontage)
-                return nullptr;
-            AnimNotifyEvents = DeathAnimMontage->Notifies;
-            break;
+            case EAnimMontageName::DeathAnimMontage:
+                if (!DeathAnimMontage) return nullptr;
+                AnimNotifyEvents = DeathAnimMontage->Notifies;
+                break;
 
-        case EAnimMontageName::EquipAnimMontage:
-            if (!EquipAnimMontage)
-                return nullptr;
-            AnimNotifyEvents = EquipAnimMontage->Notifies;
-            break;
+            case EAnimMontageName::EquipAnimMontage:
+                if (!EquipAnimMontage) return nullptr;
+                AnimNotifyEvents = EquipAnimMontage->Notifies;
+                break;
 
-        case EAnimMontageName::RifleReloadAnimMontage:
-            if (!RifleReloadAnimMontage)
-                return nullptr;
-            AnimNotifyEvents = RifleReloadAnimMontage->Notifies;
-            break;
+            case EAnimMontageName::RifleReloadAnimMontage:
+                if (!RifleReloadAnimMontage) return nullptr;
+                AnimNotifyEvents = RifleReloadAnimMontage->Notifies;
+                break;
 
-        case EAnimMontageName::LauncherReloadAnimMontage:
-            if (!LauncherReloadAnimMontage)
-                return nullptr;
-            AnimNotifyEvents = LauncherReloadAnimMontage->Notifies;
-            break;
+            case EAnimMontageName::LauncherReloadAnimMontage:
+                if (!LauncherReloadAnimMontage) return nullptr;
+                AnimNotifyEvents = LauncherReloadAnimMontage->Notifies;
+                break;
         }
 
         for (auto NotifyEvent : AnimNotifyEvents)

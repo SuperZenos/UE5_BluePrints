@@ -8,8 +8,7 @@
 float USTUPlayerHudWidget::GetHealthPercent() const
 {
     auto HealthComponent = STUUtils::GetComponentByClass<USTUHealthComponent>(GetOwningPlayerPawn());
-    if (!HealthComponent)
-        return 0.0f;
+    if (!HealthComponent) return 0.0f;
 
     return HealthComponent->GetHealthPercent();
 }

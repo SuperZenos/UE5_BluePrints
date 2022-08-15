@@ -1,7 +1,7 @@
 #pragma once
 
 #include "STUCoreTypes.generated.h"
-//weapon
+// weapon
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, Display, All);
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, Display, All);
@@ -51,20 +51,20 @@ public:
     UTexture2D* CrossHair;
 };
 
-//health
+// health
 
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float);
 
-//animation
+// animation
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent*);
 
-//character
+// character
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, Display, All);
 
-//pickup
+// pickup
 
 DEFINE_LOG_CATEGORY_STATIC(LogBasePickup, Display, All);
 DEFINE_LOG_CATEGORY_STATIC(LogAmmoPickup, Display, All);

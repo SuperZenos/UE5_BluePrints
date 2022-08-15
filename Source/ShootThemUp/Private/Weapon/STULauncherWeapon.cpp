@@ -11,13 +11,11 @@ void ASTULauncherWeapon::StartFire()
 
 void ASTULauncherWeapon::MakeShot()
 {
-    if (!GetWorld() || bIsAmmoEmpty())
-        return;
+    if (!GetWorld() || bIsAmmoEmpty()) return;
 
     FVector TraceStart;
     FVector TraceEnd;
-    if (!GetTraceData(TraceStart, TraceEnd))
-        return;
+    if (!GetTraceData(TraceStart, TraceEnd)) return;
 
     FHitResult HitResult;
     MakeHit(HitResult, TraceStart, TraceEnd);
@@ -38,14 +36,12 @@ void ASTULauncherWeapon::MakeShot()
 
 void ASTULauncherWeapon::Reload()
 {
-    if (!bCanReload())
-        return;
+    if (!bCanReload()) return;
 
     Super::Reload();
 
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player)
-        return;
+    if (!Player) return;
 
     Player->PlayLauncherReloadAnimMontage();
 }

@@ -10,7 +10,6 @@
 #include "Components/STUWeaponComponent.h"
 #include "Components/CapsuleComponent.h"
 
-
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
     : Super(ObjInit.SetDefaultSubobjectClass<USTUCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
@@ -82,8 +81,7 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 float ASTUBaseCharacter::GetMovementDirection() const
 {
-    if (GetVelocity().IsZero())
-        return 0.0f;
+    if (GetVelocity().IsZero()) return 0.0f;
     FVector ForwardVector = GetActorForwardVector();
     FVector VelocityVector = GetVelocity().GetSafeNormal();
     float DotNum = FVector::DotProduct(ForwardVector, VelocityVector);
@@ -95,16 +93,14 @@ float ASTUBaseCharacter::GetMovementDirection() const
 
 void ASTUBaseCharacter::MoveForward(float Amount)
 {
-    if (Amount == 0)
-        return;
+    if (Amount == 0) return;
     IsMovingForward = Amount > 0.0f;
     AddMovementInput(GetActorForwardVector(), Amount);
 }
 
 void ASTUBaseCharacter::MoveRight(float Amount)
 {
-    if (Amount == 0)
-        return;
+    if (Amount == 0) return;
     AddMovementInput(GetActorRightVector(), Amount);
 }
 
@@ -140,8 +136,7 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit)
     const auto FallVelocityZ = GetVelocity().Z;
     UE_LOG(LogBaseCharacter, Display, TEXT("On landed: %f"), FallVelocityZ);
 
-    if (-FallVelocityZ < LandedDamageVelocity.X)
-        return;
+    if (-FallVelocityZ < LandedDamageVelocity.X) return;
     const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, -FallVelocityZ);
     TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }

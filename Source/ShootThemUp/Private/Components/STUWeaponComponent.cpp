@@ -41,18 +41,15 @@ void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void USTUWeaponComponent::SpawnWeapons()
 {
-    if (!GetWorld())
-        return;
+    if (!GetWorld()) return;
 
     ACharacter* Character = Cast<ACharacter>(GetOwner());
-    if (!Character)
-        return;
+    if (!Character) return;
 
     for (auto WeaponClass : WeaponClasses)
     {
         auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
-        if (!Weapon)
-            continue;
+        if (!Weapon) continue;
         Weapon->SetOwner(Character);
         Weapons.Add(Weapon);
         AttachWeaponToSocket(Character->GetMesh(), Weapon, WeaponArmorySocketName);
@@ -61,8 +58,7 @@ void USTUWeaponComponent::SpawnWeapons()
 
 void USTUWeaponComponent::AttachWeaponToSocket(USceneComponent* SceneComponent, ASTUBaseWeapon* Weapon, const FName SocketName)
 {
-    if (!Weapon || !SceneComponent)
-        return;
+    if (!Weapon || !SceneComponent) return;
     FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
     Weapon->AttachToComponent(SceneComponent, AttachmentRules, SocketName);
 }
@@ -70,8 +66,7 @@ void USTUWeaponComponent::AttachWeaponToSocket(USceneComponent* SceneComponent, 
 void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 {
     ASTUBaseCharacter* Character = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Character)
-        return;
+    if (!Character) return;
 
     if (CurrentWeapon)
     {
@@ -90,8 +85,7 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 void USTUWeaponComponent::InitAnimations()
 {
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player)
-        return;
+    if (!Player) return;
 
     auto EquipStartNotify = Player->FindAnimNotifyByClass<USTUEquipStartNotify>(EAnimMontageName ::EquipAnimMontage);
     if (EquipStartNotify)
@@ -145,8 +139,7 @@ void USTUWeaponComponent::InitAnimations()
 void USTUWeaponComponent::OnEquipStart(USkeletalMeshComponent* MeshComp)
 {
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player || !(MeshComp->GetOwner() == Player))
-        return;
+    if (!Player || !(MeshComp->GetOwner() == Player)) return;
 
     bEquipAnimInProgress = true;
 }
@@ -154,8 +147,7 @@ void USTUWeaponComponent::OnEquipStart(USkeletalMeshComponent* MeshComp)
 void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
 {
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player || !(MeshComp->GetOwner() == Player))
-        return;
+    if (!Player || !(MeshComp->GetOwner() == Player)) return;
 
     bEquipAnimInProgress = false;
 }
@@ -163,8 +155,7 @@ void USTUWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp)
 void USTUWeaponComponent::OnReloadStart(USkeletalMeshComponent* MeshComp)
 {
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player || !(MeshComp->GetOwner() == Player))
-        return;
+    if (!Player || !(MeshComp->GetOwner() == Player)) return;
 
     bReloadAnimInProgress = true;
 }
@@ -172,8 +163,7 @@ void USTUWeaponComponent::OnReloadStart(USkeletalMeshComponent* MeshComp)
 void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
 {
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
-    if (!Player || !(MeshComp->GetOwner() == Player))
-        return;
+    if (!Player || !(MeshComp->GetOwner() == Player)) return;
 
     ChangeBullets();
     bReloadAnimInProgress = false;
@@ -186,23 +176,20 @@ bool USTUWeaponComponent::bCanDoAction() const
 
 void USTUWeaponComponent::StartFire()
 {
-    if (!bCanDoAction())
-        return;
+    if (!bCanDoAction()) return;
 
     CurrentWeapon->StartFire();
 }
 
 void USTUWeaponComponent::StopFire()
 {
-    if (!CurrentWeapon)
-        return;
+    if (!CurrentWeapon) return;
     CurrentWeapon->StopFire();
 }
 
 void USTUWeaponComponent::NextWeapon()
 {
-    if (!bCanDoAction())
-        return;
+    if (!bCanDoAction()) return;
 
     CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
     EquipWeapon(CurrentWeaponIndex);
@@ -210,16 +197,14 @@ void USTUWeaponComponent::NextWeapon()
 
 void USTUWeaponComponent::Reload()
 {
-    if (!bCanDoAction())
-        return;
+    if (!bCanDoAction()) return;
 
     CurrentWeapon->Reload();
 }
 
 void USTUWeaponComponent::ChangeBullets()
 {
-    if (!CurrentWeapon)
-        return;
+    if (!CurrentWeapon) return;
 
     CurrentWeapon->ChangeBullets();
 }

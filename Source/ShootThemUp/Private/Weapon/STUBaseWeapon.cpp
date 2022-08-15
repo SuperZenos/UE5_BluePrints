@@ -63,8 +63,7 @@ ACharacter* ASTUBaseWeapon::GetCharacter() const
 APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
     const auto Player = GetCharacter();
-    if (!Player)
-        return nullptr;
+    if (!Player) return nullptr;
     const auto Controller = Player->GetController<APlayerController>();
     return Controller;
 }
@@ -72,8 +71,7 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
     auto Controller = GetPlayerController();
-    if (!Controller)
-        return false;
+    if (!Controller) return false;
 
     Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
     return true;
@@ -88,8 +86,7 @@ bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 {
     FVector ViewLocation;
     FRotator ViewRotation;
-    if (!GetPlayerViewPoint(ViewLocation, ViewRotation))
-        return false;
+    if (!GetPlayerViewPoint(ViewLocation, ViewRotation)) return false;
 
     TraceStart = ViewLocation;
     const FVector ShootDirection = ViewRotation.Vector();
@@ -114,8 +111,7 @@ bool ASTUBaseWeapon::bIsHitValid(FHitResult& HitResult, const FVector& TraceStar
     ShootDirectionVector.Normalize();
 
     float ShootSingle = FMath::Acos(FVector::DotProduct(ShootDirectionVector, TraceDirectionVector));
-    if (FMath::RadiansToDegrees(ShootSingle) < 60)
-        return true;
+    if (FMath::RadiansToDegrees(ShootSingle) < 60) return true;
     return false;
 }
 
@@ -124,8 +120,7 @@ void ASTUBaseWeapon::DecreaseAmmo()
     CurrentAmmo.BulletsInClip -= 1;
     LogAmmo();
 
-    if (bIsClipEmpty() && bCanReload())
-        Reload();
+    if (bIsClipEmpty() && bCanReload()) Reload();
 }
 
 bool ASTUBaseWeapon::bIsAmmoEmpty() const
@@ -151,8 +146,7 @@ void ASTUBaseWeapon::Reload()
 
 bool ASTUBaseWeapon::TryAddAmmo(int32 BulletsAmount)
 {
-    if (CurrentAmmo.bInfinite || CurrentAmmo.SpareBullets == DefaultAmmo.SpareBullets)
-        return false;
+    if (CurrentAmmo.bInfinite || CurrentAmmo.SpareBullets == DefaultAmmo.SpareBullets) return false;
 
     CurrentAmmo.SpareBullets = FMath::Min(CurrentAmmo.SpareBullets + BulletsAmount, DefaultAmmo.SpareBullets);
     return true;
