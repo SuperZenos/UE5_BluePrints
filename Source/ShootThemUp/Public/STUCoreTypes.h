@@ -69,3 +69,37 @@ DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, Display, All);
 DEFINE_LOG_CATEGORY_STATIC(LogBasePickup, Display, All);
 DEFINE_LOG_CATEGORY_STATIC(LogAmmoPickup, Display, All);
 DEFINE_LOG_CATEGORY_STATIC(LogHealthPickup, Display, All);
+
+// VFX
+
+class UNiagaraSystem;
+
+USTRUCT(BlueprintType)
+struct FDecalData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditdefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UMaterialInterface* Material;
+
+    UPROPERTY(EditdefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    FVector Size = FVector(10.0f);
+
+    UPROPERTY(EditdefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    float LifeTime = 5.0f;
+
+    UPROPERTY(EditdefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    float FadeOutTime = 0.5f;
+};
+
+USTRUCT(BlueprintType)
+struct FImpactData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditdefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* NiagaraEffect;
+
+    UPROPERTY(EditdefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    FDecalData DecalData;
+};
