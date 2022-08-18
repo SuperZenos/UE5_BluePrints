@@ -8,6 +8,8 @@
 #include "STUBaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class UNiagaraSystem;
+class UNiagaraComponent;
 
 UCLASS() class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 {
@@ -64,6 +66,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     FWeaponUIData UIData;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    UNiagaraSystem* MuzzleFX;
+
     FTimerHandle ShotTimerHandle;
 
     virtual void BeginPlay() override;
@@ -75,6 +80,8 @@ protected:
 
     void DecreaseAmmo();
     void LogAmmo();
+
+    UNiagaraComponent* SpawnMuzzleFX();
 
 private:
     FAmmoData CurrentAmmo;

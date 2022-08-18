@@ -7,6 +7,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
 #include "Player/STUBaseCharacter.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 ASTUBaseWeapon::ASTUBaseWeapon()
 {
@@ -171,4 +173,14 @@ void ASTUBaseWeapon::LogAmmo()
     FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.BulletsInClip) + "/";
     AmmoInfo += CurrentAmmo.bInfinite ? "Infinite" : FString::FromInt(CurrentAmmo.SpareBullets);
     UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
+}
+
+UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX()
+{
+    return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX,  //
+        WeaponMesh,                                                //
+        MuzzleSocketName,                                          //
+        FVector::ZeroVector,                                       //
+        FRotator::ZeroRotator,                                     //
+        EAttachLocation::Type::SnapToTarget, true);
 }

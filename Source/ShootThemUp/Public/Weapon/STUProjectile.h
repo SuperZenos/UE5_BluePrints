@@ -9,6 +9,8 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 class USTUWeaponFXComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class SHOOTTHEMUP_API ASTUProjectile : public AActor
@@ -28,6 +30,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, Category = "Component")
     UProjectileMovementComponent* MovementComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Component")
+    UNiagaraComponent* NiagaraComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Component")
     USTUWeaponFXComponent* WeaponFXComponent;

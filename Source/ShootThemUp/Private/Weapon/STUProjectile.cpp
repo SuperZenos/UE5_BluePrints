@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 ASTUProjectile::ASTUProjectile()
 {
@@ -24,6 +26,9 @@ ASTUProjectile::ASTUProjectile()
     MovementComponent->ProjectileGravityScale = 0.0f;
 
     WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
+
+    NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("TraceFX");
+    NiagaraComponent->SetupAttachment(GetRootComponent());
 }
 
 void ASTUProjectile::SetShotDirection(const FVector& Direction)
@@ -38,6 +43,7 @@ void ASTUProjectile::BeginPlay()
     check(MovementComponent);
     check(CollisionComponent);
     check(WeaponFXComponent);
+    check(NiagaraComponent);
 
     MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
     CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);

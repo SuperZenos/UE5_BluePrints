@@ -5,6 +5,8 @@
 #include "DrawDebugHelpers.h"
 #include "Player/STUBaseCharacter.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 ASTURifleWeapon::ASTURifleWeapon()
 {
@@ -37,17 +39,16 @@ void ASTURifleWeapon::MakeShot()
 
     FHitResult HitResult;
     MakeHit(HitResult, TraceStart, TraceEnd);
+
+    FVector TraceFXEnd = TraceEnd;
     if (HitResult.bBlockingHit && bIsHitValid(HitResult, TraceStart, TraceEnd))
     {
+        TraceFXEnd = HitResult.Location;
         MakeDamage(HitResult);
-        //DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::White, false, 3.0f, 0);
-        //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 32, FColor::Red, false, 5.0f);
         WeaponFXComponent->PlayImpactFX(HitResult);
     }
-    else
-    {
-        DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::White, false, 3.0f, 0);
-    }
+
+    SpawnTraceFX(GetMuzzleWorldLocation(), TraceFXEnd);
 
     DecreaseAmmo();
 }
@@ -86,4 +87,40 @@ void ASTURifleWeapon::Reload()
     if (!Player) return;
 
     Player->PlayRifleReloadAnimMontage();
+}
+
+void ASTURifleWeapon::StartFire()
+{
+    Super::StartFire();
+    InitMuzzleFX();
+}
+
+void ASTURifleWeapon::StopFire()
+{
+    Super::StopFire();
+    SetMuzzleFXVisibility(false);
+}
+
+void ASTURifleWeapon::InitMuzzleFX()
+{
+    if (!MuzzleFXComponent) MuzzleFXComponent = SpawnMuzzleFX();
+    SetMuzzleFXVisibility(true);
+}
+
+void ASTURifleWeapon::SetMuzzleFXVisibility(bool bIsVisible)
+{
+    if (MuzzleFXComponent)
+    {
+        MuzzleFXComponent->SetPaused(!bIsVisible);
+        MuzzleFXComponent->SetVisibility(bIsVisible, true);
+    }
+}
+
+void ASTURifleWeapon::SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd)
+{
+    const auto TraceFXComponent = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TraceFX, TraceStart);
+    if (TraceFXComponent)
+    {
+        TraceFXComponent->SetNiagaraVariableVec3(TraceTargetName, TraceEnd);
+    }
 }

@@ -23,7 +23,6 @@ bool USTUHealthComponent::TryToGetHealthPickup(float HealthAmount)
     }
 }
 
-// Called when the game starts
 void USTUHealthComponent::BeginPlay()
 {
     Super::BeginPlay();
