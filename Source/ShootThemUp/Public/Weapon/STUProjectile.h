@@ -1,4 +1,4 @@
-// Shoot Them Up Game. All Rights Reserved
+// Shoot Them Up Game. All Rights Reserved.
 
 #pragma once
 

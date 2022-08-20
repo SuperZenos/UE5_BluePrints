@@ -1,4 +1,4 @@
-// Shoot Them Up Game. All Rights Reserved
+// Shoot Them Up Game. All Rights Reserved.
 
 #include "Pickups/STUHealthPickup.h"
 #include "Components/STUHealthComponent.h"

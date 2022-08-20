@@ -1,4 +1,4 @@
-// Shoot Them Up Game. All Rights Reserved
+// Shoot Them Up Game. All Rights Reserved.
 
 #include "Components/STUWeaponComponent.h"
 #include "Weapon/STUBaseWeapon.h"

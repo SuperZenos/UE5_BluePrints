@@ -1,4 +1,4 @@
-// Shoot Them Up Game. All Rights Reserved
+// Shoot Them Up Game. All Rights Reserved.
 
 #include "Player/STUBaseCharacter.h"
 #include "Camera/CameraComponent.h"
@@ -24,7 +24,7 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit)
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
 
-    HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("STUHealthComponent");
+    HealthComponent = CreateDefaultSubobject<USTUHealthComponent>("HealthComponent");
 
     HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
     HealthTextComponent->SetupAttachment(GetRootComponent());
