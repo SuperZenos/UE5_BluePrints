@@ -13,4 +13,5 @@ class SHOOTTHEMUP_API USTUAIPerceptionComponent : public UAIPerceptionComponent
 
 public:
     AActor* GetClosestEnemy() const;
+    bool bIsInPerceivedActors(AActor* const InActor) const;
 };

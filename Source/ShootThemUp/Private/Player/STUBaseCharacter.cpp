@@ -155,3 +155,8 @@ void ASTUBaseCharacter::PlayLauncherReloadAnimMontage()
 {
     PlayAnimMontage(LauncherReloadAnimMontage);
 }
+
+bool ASTUBaseCharacter::bIsAlive()
+{
+    return !HealthComponent->bIsDead();
+}

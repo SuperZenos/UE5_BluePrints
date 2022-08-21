@@ -33,6 +33,8 @@ public:
     void PlayRifleReloadAnimMontage();
     void PlayLauncherReloadAnimMontage();
 
+    bool bIsAlive();
+
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     UCameraComponent* CameraComponent;

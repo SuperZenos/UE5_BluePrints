@@ -36,3 +36,12 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
 
     return BestActor;
 }
+
+bool USTUAIPerceptionComponent::bIsInPerceivedActors(AActor* const InActor) const
+{
+    if (!InActor) return false;
+
+    TArray<AActor*> PerceptionActors;
+    GetCurrentlyPerceivedActors(UAISense_Sight::StaticClass(), PerceptionActors);
+    return PerceptionActors.Contains(InActor);
+}
