@@ -120,6 +120,7 @@ void ASTUBaseCharacter::OnDeath()
     GetCharacterMovement()->DisableMovement();
     SetLifeSpan(LifeSpanOnDeath);
     GetCapsuleComponent()->DestroyComponent();
+    WeaponComponent->StopFire();
     if (Controller)
     {
         Controller->ChangeState(NAME_Spectating);

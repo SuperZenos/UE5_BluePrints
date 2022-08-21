@@ -141,6 +141,7 @@ void USTUWeaponComponent::OnEquipStart(USkeletalMeshComponent* MeshComp)
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
     if (!Player || !(MeshComp->GetOwner() == Player)) return;
 
+    bFireFlag = false;
     bEquipAnimInProgress = true;
 }
 
@@ -157,6 +158,7 @@ void USTUWeaponComponent::OnReloadStart(USkeletalMeshComponent* MeshComp)
     auto Player = Cast<ASTUBaseCharacter>(GetOwner());
     if (!Player || !(MeshComp->GetOwner() == Player)) return;
 
+    bFireFlag = false;
     bReloadAnimInProgress = true;
 }
 
@@ -171,19 +173,23 @@ void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp)
 
 bool USTUWeaponComponent::bCanDoAction() const
 {
-    return !bEquipAnimInProgress && !bReloadAnimInProgress && CurrentWeapon;
+    auto Player = Cast<ASTUBaseCharacter>(GetOwner());
+    return Player && Player->bIsAlive() && !bEquipAnimInProgress && !bReloadAnimInProgress && CurrentWeapon;
 }
 
 void USTUWeaponComponent::StartFire()
 {
     if (!bCanDoAction()) return;
 
+    bFireFlag = true;
     CurrentWeapon->StartFire();
 }
 
 void USTUWeaponComponent::StopFire()
 {
     if (!CurrentWeapon) return;
+
+    bFireFlag = false;
     CurrentWeapon->StopFire();
 }
 

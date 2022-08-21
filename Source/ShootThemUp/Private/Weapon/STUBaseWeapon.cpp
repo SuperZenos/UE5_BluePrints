@@ -52,8 +52,8 @@ void ASTUBaseWeapon::MakeShot() {}
 
 void ASTUBaseWeapon::OnCharacterDeath()
 {
-    Destroy();
     StopFire();
+    Destroy();
 }
 
 ACharacter* ASTUBaseWeapon::GetCharacter() const
@@ -72,10 +72,21 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
-    auto Controller = GetPlayerController();
-    if (!Controller) return false;
+    const auto STUCharacter = Cast<ASTUBaseCharacter>(GetOwner());
+    if (!STUCharacter) return false;
 
-    Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    if (STUCharacter->IsPlayerControlled())
+    {
+        auto Controller = GetPlayerController();
+        if (!Controller) return false;
+
+        Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    }
+    else
+    {
+        ViewLocation = GetMuzzleWorldLocation();
+        ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+    }
     return true;
 }
 

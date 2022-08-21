@@ -21,7 +21,8 @@ public:
     void StopFire();
     void NextWeapon();
     void Reload();
-    void ChangeBullets();
+
+    bool bIsFiring() const { return bFireFlag; }
 
     bool GetWeaponUIData(FWeaponUIData& UIData) const;
     bool GetWeaponAmmoData(FAmmoData& AmmoData) const;
@@ -54,6 +55,7 @@ private:
 
     bool bEquipAnimInProgress = false;
     bool bReloadAnimInProgress = false;
+    bool bFireFlag = false;
 
     void SpawnWeapons();
     void EquipWeapon(int32 WeaponIndex);
@@ -63,6 +65,7 @@ private:
     void OnEquipFinished(USkeletalMeshComponent* MeshComp);
     void OnReloadStart(USkeletalMeshComponent* MeshComp);
     void OnReloadFinished(USkeletalMeshComponent* MeshComp);
+    void ChangeBullets();
 
     bool bCanDoAction() const;
 };
