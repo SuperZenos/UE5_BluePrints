@@ -65,6 +65,7 @@ void USTUWeaponComponent::AttachWeaponToSocket(USceneComponent* SceneComponent, 
 
 void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
 {
+    if (WeaponIndex > Weapons.Num()) return;
     ASTUBaseCharacter* Character = Cast<ASTUBaseCharacter>(GetOwner());
     if (!Character) return;
 
@@ -74,7 +75,7 @@ void USTUWeaponComponent::EquipWeapon(int32 WeaponIndex)
         AttachWeaponToSocket(Character->GetMesh(), CurrentWeapon, WeaponArmorySocketName);
     }
 
-    CurrentWeapon = Weapons[CurrentWeaponIndex];
+    CurrentWeapon = Weapons[WeaponIndex];
     AttachWeaponToSocket(Character->GetMesh(), CurrentWeapon, WeaponAttachSocketName);
 
     bEquipAnimInProgress = true;
@@ -235,13 +236,20 @@ bool USTUWeaponComponent::GetWeaponAmmoData(FAmmoData& AmmoData) const
     return false;
 }
 
-bool USTUWeaponComponent::TryAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 BulletsAmount)
+bool USTUWeaponComponent::bIsAmmoEmpty() const
+{
+    FAmmoData AmmoData;
+    GetWeaponAmmoData(AmmoData);
+    return AmmoData.bInfinite ? false : AmmoData.BulletsInClip == 0 && AmmoData.SpareBullets == 0;
+}
+
+bool USTUWeaponComponent::TryToGetAmmoPickup(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 BulletsAmount)
 {
     for (auto Weapon : Weapons)
     {
         if (Weapon && Weapon->IsA(WeaponType))
         {
-            return Weapon->TryAddAmmo(BulletsAmount);
+            return Weapon->TryToGetAmmoPickup(BulletsAmount);
         }
     }
     return false;

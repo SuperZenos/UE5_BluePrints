@@ -26,7 +26,7 @@ public:
     bool bCanReload() const;
     void ChangeBullets();
     virtual void Reload();
-    virtual bool TryAddAmmo(int32 BulletsAmount);
+    virtual bool TryToGetAmmoPickup(int32 BulletsAmount);
 
     void OnCharacterDeath();
 

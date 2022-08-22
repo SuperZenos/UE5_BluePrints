@@ -39,8 +39,9 @@ void ASTUBaseWeapon::StartFire()
     }
 
     MakeShot();
-    float TimerBetweenShots = 60.0f / RevolutionsPerMinute;
-    GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimerBetweenShots, true);
+    float TimeBetweenShots = 60.0f / RevolutionsPerMinute;
+    if (!GetWorldTimerManager().IsTimerActive(ShotTimerHandle))
+        GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimeBetweenShots, true);
 }
 
 void ASTUBaseWeapon::StopFire()
@@ -158,7 +159,7 @@ void ASTUBaseWeapon::Reload()
     UE_LOG(LogBaseWeapon, Display, TEXT("Reload"));
 }
 
-bool ASTUBaseWeapon::TryAddAmmo(int32 BulletsAmount)
+bool ASTUBaseWeapon::TryToGetAmmoPickup(int32 BulletsAmount)
 {
     if (CurrentAmmo.bInfinite || CurrentAmmo.SpareBullets == DefaultAmmo.SpareBullets) return false;
 

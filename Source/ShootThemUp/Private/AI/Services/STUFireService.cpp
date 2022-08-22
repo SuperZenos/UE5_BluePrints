@@ -26,6 +26,5 @@ void USTUFireService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
         WeaponComp->StopFire();
         return;
     }
-
-    if (!WeaponComp->bIsFiring()) WeaponComp->StartFire();
+    WeaponComp->StartFire();
 }

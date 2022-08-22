@@ -15,5 +15,5 @@ bool ASTUAmmoPickup::GivePickupTo(APawn* PlayerPawn)
     auto WeaponComponent = STUUtils::GetComponentByClass<USTUWeaponComponent>(PlayerPawn);
     if (!WeaponComponent) return false;
 
-    return WeaponComponent->TryAddAmmo(WeaponType, BulletsAmount);
+    return WeaponComponent->TryToGetAmmoPickup(WeaponType, BulletsAmount);
 }
