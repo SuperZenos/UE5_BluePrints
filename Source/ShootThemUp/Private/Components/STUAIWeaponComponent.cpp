@@ -20,7 +20,7 @@ void USTUAIWeaponComponent::NextWeapon()
     while (NextIndex != CurrentWeaponIndex)
     {
         if (!Weapons[NextIndex]->bIsAmmoEmpty()) break;
-        NextIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
+        NextIndex = (NextIndex + 1) % Weapons.Num();
     }
     if (CurrentWeaponIndex == NextIndex) return;
     CurrentWeaponIndex = NextIndex;
