@@ -69,6 +69,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     UNiagaraSystem* MuzzleFX;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    TSubclassOf<UCameraShakeBase> ShootCameraShake;
+
     FTimerHandle ShotTimerHandle;
 
     virtual void BeginPlay() override;
@@ -82,6 +85,8 @@ protected:
     void LogAmmo();
 
     UNiagaraComponent* SpawnMuzzleFX();
+
+    void PlayShootCameraShake();
 
 private:
     FAmmoData CurrentAmmo;

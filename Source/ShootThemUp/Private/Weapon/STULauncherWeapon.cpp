@@ -33,6 +33,7 @@ void ASTULauncherWeapon::MakeShot()
     }
     DecreaseAmmo();
     SpawnMuzzleFX();
+    PlayShootCameraShake();
 }
 
 void ASTULauncherWeapon::Reload()

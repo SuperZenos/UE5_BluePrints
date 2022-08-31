@@ -27,7 +27,6 @@ protected:
     float RespawnTime = 5.0f;
 
     virtual void BeginPlay() override;
-    virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 private:
     float RotationYaw = 0.0f;

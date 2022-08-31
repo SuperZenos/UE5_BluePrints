@@ -196,3 +196,14 @@ UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX()
         FRotator::ZeroRotator,                                     //
         EAttachLocation::Type::SnapToTarget, true);
 }
+
+void ASTUBaseWeapon::PlayShootCameraShake()
+{
+    const auto Player = Cast<APawn>(GetOwner());
+    if (!Player) return;
+
+    const auto Controller = Player->GetController<APlayerController>();
+    if (!Controller || !Controller->PlayerCameraManager) return;
+
+    //auto CameraShake = Controller->PlayerCameraManager->StartCameraShake(ShootCameraShake);
+}

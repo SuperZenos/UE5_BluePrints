@@ -28,16 +28,19 @@ void ASTUBasePickup::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 
     AddActorLocalRotation(FRotator(0.0f, RotationYaw, 0.0f));
-}
 
-void ASTUBasePickup::NotifyActorBeginOverlap(AActor* OtherActor)
-{
-    Super::NotifyActorBeginOverlap(OtherActor);
-
-    auto Pawn = Cast<APawn>(OtherActor);
-    if (GivePickupTo(Pawn))
+    TSet<AActor*> OverlappingActors;
+    GetOverlappingActors(OverlappingActors);
+    if (OverlappingActors.Num() != 0)
     {
-        PickupWasTaken();
+        for (const auto OverlappingActor : OverlappingActors)
+        {
+            auto Pawn = Cast<APawn>(OverlappingActor);
+            if (GivePickupTo(Pawn))
+            {
+                PickupWasTaken();
+            }
+        }
     }
 }
 

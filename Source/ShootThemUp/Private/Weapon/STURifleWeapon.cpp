@@ -49,6 +49,7 @@ void ASTURifleWeapon::MakeShot()
     }
 
     SpawnTraceFX(GetMuzzleWorldLocation(), TraceFXEnd);
+    PlayShootCameraShake();
 
     DecreaseAmmo();
 }
